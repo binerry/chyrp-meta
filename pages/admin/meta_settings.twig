@@ -1,0 +1,46 @@
+{% extends "layout.twig" %}
+
+{% block title %}${ "Meta Settings" | translate("meta") }{% endblock %}
+
+{% block content %}
+            <form id="meta_settings" class="split" action="{% admin "meta_settings" %}" method="post" enctype="multipart/form-data" accept-charset="utf-8">
+                <fieldset>
+                    <p>
+                        <label for="meta_locale">${ "Locale" | translate("meta") }</label>
+                        <input class="text" type="text" name="meta_locale" value="${ site.meta_locale | escape }" id="meta_locale" />
+                    </p>
+                    <p>
+                        <label for="meta_facebook">${ "Enable facebook open graph tags" | translate("meta") }</label>
+                        <input type="checkbox" class="checkbox" name="meta_facebook"${ site.meta_facebook | checked } /> ${ "enabled" | translate("meta") }
+                    </p>
+                    <p>
+                        <label for="meta_facebook_url">${ "Facebook profile/page url" | translate("meta") }</label>
+                        <input class="text" type="text" name="meta_facebook_url" value="${ site.meta_facebook_url | escape }" id="meta_facebook_url" />
+                    </p>                    
+                    <p>
+                        <label for="meta_facebook_ids">${ "Facebook user id(s) of admin (comma-seperated)" | translate("meta") }</label>
+                        <input class="text" type="text" name="meta_facebook_ids" value="${ site.meta_facebook_ids | escape }" id="meta_facebook_ids" />
+                    </p>
+                    <p>
+                        <label for="meta_twitter">${ "Enable twitter card tags" | translate("meta") }</label>
+                        <input type="checkbox" class="checkbox" name="meta_twitter"${ site.meta_twitter | checked } /> ${ "enabled" | translate("meta") }
+                    </p>
+                    <p>
+                        <label for="meta_twitter_site">${ "Twitter username (starts with @)" | translate("meta") }</label>
+                        <input class="text" type="text" name="meta_twitter_site" value="${ site.meta_twitter_site | escape }" id="meta_twitter_site" />
+                    </p>
+                    <p>
+                        <label for="meta_default_image">${ "Default Image" | translate("meta") }</label>                        
+                        {% if site.meta_default_image %}
+                        <img alt="$site.meta_default_image" height="30" src="$site.chyrp_url/includes/thumb.php?file=..$site.uploads_path/${ site.meta_default_image | urlencode }&amp;max_height=30&amp;quality=80" />
+                        {% endif %}
+                        <input class="file" name="meta_default_image" value="" id="meta_default_image" type="file">
+                    </p>
+                    <p class="buttons">
+                        <button type="submit" class="yay"><img src="$theme_url/images/icons/success.svg" alt="success" />${ "Update" | translate }</button>
+                    </p>
+
+                    <input type="hidden" name="hash" value="$site.secure_hashkey" id="hash" />
+                </fieldset>
+            </form>
+{% endblock %}
