@@ -65,8 +65,6 @@
         }
         
         public function insert_meta($post, $page) {
-            ini_set('display_errors', 1);
-            //var_dump($post); 
             $meta_template = MODULES_DIR."/meta/meta.twig";
             if (!file_exists($meta_template))
                 return;
@@ -103,14 +101,13 @@
                     $meta["image"] = $feathers['article']->hero_url($post);
                 elseif ($post->feather == 'photo')
                     $meta["image"] = $feathers['photo']->image_url($post);
-                
+            
+            // check for page view and overwrite meta-data            
             } elseif ( Route::current()->action == "page" && isset($page) ) {
                 $meta["title"] = oneof($page->title, $theme->title, $config->name);
                 $meta["description"] = oneof($this->clean_and_truncate($page->body), $config->description);
                 $meta["url"] = $page->url();
             }
-            
-            //{% if post.headline %}${ post.headline | escape }{% elseif post.title %}${ post.title | escape }{% elseif page.title %}${ page.title | escape }{% else %}$site.name{% endif %}
             
             $context = array();
             $context["site"] = $config;
