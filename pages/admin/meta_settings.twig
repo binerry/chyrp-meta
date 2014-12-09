@@ -6,6 +6,26 @@
             <form id="meta_settings" class="split" action="{% admin "meta_settings" %}" method="post" enctype="multipart/form-data" accept-charset="utf-8">
                 <fieldset>
                     <p>
+                        <label for="meta_default">${ "Enable standard tags (description, keywords, author, robots)" | translate("meta") }</label>
+                        <input type="checkbox" class="checkbox" name="meta_default"${ site.meta_default | checked } /> ${ "enabled" | translate("meta") }
+                    </p>
+                    <p>
+                        <label for="meta_default_description">${ "Description" | translate("meta") }</label>
+                        <textarea name="meta_default_description" id="meta_default_description" rows="2" cols="40">${ site.meta_default_description | escape(false, false) }</textarea>
+                    </p>
+                    <p>
+                        <label for="meta_default_keywords">${ "Keywords" | translate("meta") }</label>
+                        <textarea name="meta_default_keywords" id="meta_default_keywords" rows="2" cols="40">${ site.meta_default_keywords | escape(false, false) }</textarea>
+                    </p>
+                    <p>
+                        <label for="meta_default_author">${ "Author" | translate("meta") }</label>
+                        <input class="text" type="text" name="meta_default_author" value="${ site.meta_default_author | escape }" id="meta_default_author" />
+                    </p>
+                    <p>
+                        <label for="meta_default_robots">${ "Robots" | translate("meta") }</label>
+                        <input class="text" type="text" name="meta_default_robots" value="${ site.meta_default_robots | escape }" id="meta_default_robots" />
+                    </p>
+                    <p>
                         <label for="meta_locale">${ "Locale" | translate("meta") }</label>
                         <input class="text" type="text" name="meta_locale" value="${ site.meta_locale | escape }" id="meta_locale" />
                     </p>

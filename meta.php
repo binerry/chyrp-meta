@@ -6,6 +6,11 @@
         
         static function __install() {                         
             $config = Config::current();
+            $config->set("meta_default", "0");
+            $config->set("meta_default_description", $config->description);
+            $config->set("meta_default_keywords", "");
+            $config->set("meta_default_author", "");
+            $config->set("meta_default_robots", "all");            
             $config->set("meta_locale", "en_US");
             $config->set("meta_facebook", "0");
             $config->set("meta_facebook_url", "https://www.facebook.com/[facebook-name]");
@@ -17,6 +22,11 @@
         
         static function __uninstall() {            
             $config = Config::current();
+            $config->remove("meta_default");
+            $config->remove("meta_default_description");
+            $config->remove("meta_default_keywords");
+            $config->remove("meta_default_author");
+            $config->remove("meta_default_robots");            
             $config->remove("meta_locale");
             $config->remove("meta_facebook");
             $config->remove("meta_facebook_url");
@@ -48,7 +58,12 @@
             
             $config = Config::current();
             
-            $set = array($config->set("meta_facebook", isset($_POST['meta_facebook'])),
+            $set = array($config->set("meta_default", isset($_POST['meta_default'])),
+                         $config->set("meta_default_description", $_POST['meta_default_description']),
+                         $config->set("meta_default_keywords", $_POST['meta_default_keywords']),
+                         $config->set("meta_default_author", $_POST['meta_default_author']),
+                         $config->set("meta_default_robots", $_POST['meta_default_robots']),
+                         $config->set("meta_facebook", isset($_POST['meta_facebook'])),
                          $config->set("meta_facebook_url", $_POST['meta_facebook_url']),
                          $config->set("meta_facebook_ids", $_POST['meta_facebook_ids']),
                          $config->set("meta_twitter", isset($_POST['meta_twitter'])),
@@ -84,8 +99,11 @@
             $feathers = Feathers::$instances;
             
             $meta = array();
+            $meta["keywords"] = $config->meta_default_keywords;
+            $meta["author"] = $config->meta_default_author;
+            $meta["robots"] = $config->meta_default_robots;
             $meta["title"] = oneof($theme->title, $config->name);
-            $meta["description"] = $config->description;
+            $meta["description"] = oneof($config->meta_default_description, $config->description);
             $meta["url"] = $config->chyrp_url.$_SERVER['REQUEST_URI'];
             
             if (isset($config->meta_default_image))
@@ -97,9 +115,15 @@
                 $meta["description"] = oneof($this->clean_and_truncate($post->body), $this->clean_and_truncate($post->description), $this->clean_and_truncate($post->caption), $this->clean_and_truncate($post->quote), $config->description);
                 $meta["url"] = $post->url();
                 
-                if ($post->feather == 'article')
+                if ( isset($post->tags) && count($post->tags) > 0 )
+                    $meta["keywords"] = implode(", ", $post->tags);
+                
+                if ( isset($post->author) )
+                    $meta["author"] = $post->author;
+                    
+                if ( $post->feather == 'article' )
                     $meta["image"] = $feathers['article']->hero_url($post);
-                elseif ($post->feather == 'photo')
+                elseif ( $post->feather == 'photo' )
                     $meta["image"] = $feathers['photo']->image_url($post);
             
             // check for page view and overwrite meta-data            
